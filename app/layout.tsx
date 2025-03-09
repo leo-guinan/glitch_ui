@@ -1,12 +1,37 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
+import { load, trackPageview } from 'fathom-client';
+import { useEffect } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
+// Replace XXXXXXXX with your Fathom site ID
+const FATHOM_SITE_ID = 'JCWQDOLY';
+
 export const metadata = {
-  title: 'AI SDK - Next.js OpenAI Examples',
-  description: 'Examples of using the AI SDK with Next.js and OpenAI.',
+  title: "Welcome to Glitch's Sacred Portal",
+  description: 'This is the core of the internet\'s weirdness',
 };
+
+function FathomAnalytics() {
+  useEffect(() => {
+    load(FATHOM_SITE_ID, {
+      includedDomains: ['glitch.maketheinternetweirdagain.com'], // Replace with your domain
+      url: 'https://cdn.usefathom.com/script.js', // Optional: Only needed if you're using custom domains
+    });
+
+    const onRouteChange = () => {
+      trackPageview();
+    };
+
+    onRouteChange(); // Track initial pageview
+    return () => {
+      // Cleanup if needed
+    };
+  }, []);
+
+  return null;
+}
 
 export default function RootLayout({
   children,
@@ -15,7 +40,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <FathomAnalytics />
+        {children}
+      </body>
     </html>
   );
 }
